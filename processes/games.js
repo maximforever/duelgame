@@ -7,7 +7,7 @@
 		//teams
 			var teams = [];	//this will inform how many different civilizations there are. maybe one per player, maybe not
 			for (var i = 0; i < players.length; i++) {			/* ===!!!=== Where are we getting 'players' -- okay, just got it - function arg:D ?*/
-				if (!(teams.indexOf(players[i].team) > -1)) { 	// if the player isn't already on a team (?)
+				if (!(teams.indexOf(players[i].team) > -1)) { 	// if the player's team doesn't exist
 					teams.push(players[i].team);				//this will keep a running list of all the unique teams
 				}
 			}
@@ -32,6 +32,8 @@
 
 				default:
 					var size = 16;
+
+					/* consider adding forumula later? */
 			}
 
 			gameData.size = size;
@@ -126,7 +128,7 @@
 							}
 
 							attempts++;
-							/* ===!!=== is there ever a scenatio at which we go over 100 attempts? */
+
 						}
 					}
 
@@ -142,7 +144,7 @@
 					starting_rock = 1000;
 
 				//add to gameData object
-					gameData.civilizations["civ_" + teams[i]] = {			/* ===!!=== so, this effectively represents all the info we'd want about a player (?)	 */
+					gameData.civilizations["civ_" + teams[i]] = {			
 						name: civ_name,
 						resources: {	//starting resources
 							food: starting_food,
@@ -160,19 +162,13 @@
 							"unit_0": {
 								x: city_x,	//this unit will start in the capital city
 								y: city_y,	//this unit will start in the capital city
+								city: "city_0",
 								type: "peasant",
 								count: 10,	//how many of them there are there in this group
 								task: {		//this is what action the unit is currently taking - none for now
 									startTimestamp:null,
 									endTimestamp:null,
-									action:null
-										/* ===!!===
-										consinder adding:
-
-										city: city_name
-
-										this may be userful for city combat later
-										*/
+									action:null,
 								}
 							}
 						}
@@ -188,7 +184,6 @@
 					name: players[i].name, //this also comes from the users database
 					team: players[i].team, //this comes from the "create game" form, where you choose teams
 
-					/* ===!!!=== not sure what's happening here - we're getting the x & y coordinates from the city city above? */
 					x: gameData.civilizations["civ_" + players[i].team].cities["city_0"].x,	//we'll move the player to their capital city
 					y: gameData.civilizations["civ_" + players[i].team].cities["city_0"].y //we'll move the player to their capital city
 				};
@@ -198,6 +193,7 @@
 			gameData.queue = [];	//this is where player actions will go, since they usually won't resolve immediately
 
 		//insert into mongodb
+		console.log(gameData);
 			return gameData;	//for now, just return it - this would obviously go into a database too
 	}
 
@@ -219,6 +215,11 @@
 		]
 
 		return games[id];
+	}
+
+/* updateGame */
+	function updateGame(gameData) {
+		
 	}
 
 /* export module */

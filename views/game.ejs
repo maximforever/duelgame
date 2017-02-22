@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="../stylesheet.css"/>
 		<style>
 			:root {
-				--size: 1/<%= gameData.size %>;		/* ===!!=== ??*/
+				--size: 1/<%= gameData.size %>;		/*this is a CSS variable*/
 			}
 		</style>
 	</head>
@@ -15,8 +15,14 @@
 		<p><%= JSON.stringify(gameData); %></p>
 
 		<br>
-		<%= playerNames %>
+		PLAYERS:
+		<% var playerNames = []; 
+		for (var key in gameData.players) { 
+			playerNames.push(gameData.players[key].name);
+		} %>
+		<%= playerNames.join(", "); %>
 
+		
 		<br><hr><br>
 			
 		<div id="map">
@@ -31,7 +37,7 @@
 					<% var x = gameData.civilizations[civ_ids[i]].cities[city_ids[j]].x; %>
 					<% var y = gameData.civilizations[civ_ids[i]].cities[city_ids[j]].y; %>
 					<% var city_name = gameData.civilizations[civ_ids[i]].cities[city_ids[j]].name; %>
-					<% cityCoordinates[x + "," + y] = {id: "civ_" + civ_ids[i] + "_city_" + city_ids[j], x: x, y: y, name: city_name} %>
+					<% cityCoordinates[x + "," + y] = {id: civ_ids[i] + "_" + city_ids[j], x: x, y: y, name: city_name} %>
 				<% } %>
 			
 			<% } %>
@@ -47,7 +53,7 @@
 							
 							<!-- check if there's a city with the same coordinates -->
 							<% if (typeof cityCoordinates[x + "," + y] !== "undefined") { %>
-								<div id="<%= cityCoordinates[x + "," + y].id %>" class="city" style="left: calc((500px) * 1/<%= gameData.size %> * <%= x %>); top: calc((500px) * 1/<%= gameData.size %> * <%= y %>)" title="<%= cityCoordinates[x + "," + y].name %>" x="<%= x %>" y="<%= y %>"></div>
+								<div id="<%= cityCoordinates[x + "," + y].id %>" class="city" title="<%= cityCoordinates[x + "," + y].name %>" x="<%= x %>" y="<%= y %>"></div>
 							<% } %>
 						
 						</div>
