@@ -1,0 +1,25 @@
+{
+  "name": "duelgame",
+  "version": "1.0.0",
+  "description": "gotta be the very best",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximforever/duelgame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maximforever/duelgame/issues"
+  },
+  "homepage": "https://github.com/maximforever/duelgame#readme",
+  "dependencies": {
+    "ejs": "^2.5.6",
+    "express": "^4.14.1",
+    "nodemon": "^1.11.0"
+  }
+}
