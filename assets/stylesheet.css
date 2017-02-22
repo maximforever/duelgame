@@ -1,0 +1,63 @@
+/* page */
+	body {
+		margin: 0px;
+		padding: 0px;
+		border: 0px;
+		min-height: 100vh;
+		min-width: 100vw;
+		background-color: white;
+	}
+
+/* map */
+	#map {
+		height: 500px;
+		width: 500px;
+		border: 5px solid black;
+		margin: 10px;
+		position: relative;
+	}
+
+	.row {
+		float: left;
+		width: 100%;
+		height: calc(var(--size) * 100%);
+	}
+
+	.tile {
+		width: calc(var(--size) * 100%);
+		height: 100%;
+		float: left;
+	}
+
+	.city {
+		position: absolute;
+		width: calc(var(--size) * 500px);
+		height: calc(var(--size) * 500px);
+		clip-path: circle(25% at 50% 50%);
+		background-color: #222222;
+		margin: 0px;
+		padding: 0px;
+	}
+
+/* terrain */
+	.tile[terrain="plains"] {
+		background-color: #00ce2c;
+	}
+
+	.tile[terrain="forest"] {
+		background-color: #006309;
+	}
+
+	.tile[terrain="mountains"] {
+		background-color: #4f4f54;
+	}
+
+	.tile[terrain="desert"] {
+		background-color: #f4ff84;
+	}
+
+	.tile[terrain="sea"] {
+		background-color: #b6b6ed;
+	}
+
+	
