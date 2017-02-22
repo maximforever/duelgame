@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="../stylesheet.css"/>
 		<style>
 			:root {
-				--size: 1/<%= gameData.size %>;
+				--size: 1/<%= gameData.size %>;		/* ===!!=== ??*/
 			}
 		</style>
 	</head>
@@ -13,6 +13,9 @@
 		<div>You are currently viewing gameData for game <%= id %></div>
 		
 		<p><%= JSON.stringify(gameData); %></p>
+
+		<br>
+		<%= playerNames %>
 
 		<br><hr><br>
 			

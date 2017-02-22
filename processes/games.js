@@ -6,9 +6,9 @@
 
 		//teams
 			var teams = [];	//this will inform how many different civilizations there are. maybe one per player, maybe not
-			for (var i = 0; i < players.length; i++) {
-				if (!(teams.indexOf(players[i].team) > -1)) { //this will keep a running list of all the unique teams
-					teams.push(players[i].team);
+			for (var i = 0; i < players.length; i++) {			/* ===!!!=== Where are we getting 'players' -- okay, just got it - function arg:D ?*/
+				if (!(teams.indexOf(players[i].team) > -1)) { 	// if the player isn't already on a team (?)
+					teams.push(players[i].team);				//this will keep a running list of all the unique teams
 				}
 			}
 
@@ -38,7 +38,13 @@
 
 		//tiles
 			gameData.tiles = {};	//create a nested "tiles" object within the gameData
+			
 			var terrainTypes = ["plains","plains","plains","plains","plains","plains","plains","plains","plains","forest","forest","forest","forest","forest","mountains","mountains","mountains","mountains","desert","desert","sea","sea","sea","sea","sea","sea","sea"];	//plains x 9, forest x 5, mountains x 4, desert x 3, sea x 7
+
+			
+
+
+
 
 			for (var y = 0; y < size; y++) { //use x and y coordinates to create a square grid
 				for (var x = 0; x < size; x++) {
@@ -46,15 +52,21 @@
 					var bonus = [];	//previously placed tile terrains should influence the type of terrain
 
 					if (typeof gameData.tiles[(x - 1) + "," + y] !== "undefined") { //get terrain type to the North
-						bonus = [gameData.tiles[(x - 1) + "," + y].terrain];
+						bonus = [gameData.tiles[(x - 1) + "," + y].terrain];		// if it exists, the bonus is that terrain's type
 					}
 					if (typeof gameData.tiles[x + "," + (y - 1)] !== "undefined") { //get terrain type to the West
-						bonus = [gameData.tiles[x + "," + (y - 1)].terrain];
+						bonus = [gameData.tiles[x + "," + (y - 1)].terrain];		// if it exists, the bonus is that terrain's type
 					}
 
-					var terrain = terrainTypes.concat(bonus, bonus, bonus, bonus)[Math.floor(Math.random() * terrainTypes.concat(bonus, bonus, bonus, bonus).length)];	//pick a random terrain type
+					var combinedTerrain = terrainTypes.concat(bonus, bonus, bonus, bonus);	// MP - created new variable to shorten code.
+					var terrain = combinedTerrain[Math.floor(Math.random() * combinedTerrain.length)];	
+					//pick a random terrain type:
+					// combine our terrainTypes array with the new bonus tiles
+					// pick a # between 0 and length of array
+					// pick an element of the array at that index - thereby picking	 a random element  
 
-					gameData.tiles[x + "," + y] = {
+
+					gameData.tiles[x + "," + y] = {				// tiles[x, y] -- the tile we're currently working on
 						x: x,				//x coordinate
 						y: y,				//y coordinate
 						terrain: terrain	//terrain type
@@ -83,7 +95,7 @@
 					for (var j = 0; j < Math.floor(Math.random() * teamCount * 3); j++) { //loop through some pseudo-random number of times
 						var remove = Math.floor(Math.random() * civ_name.length); //pick a random character
 						civ_name = civ_name.slice(0, remove) + civ_name.slice(remove + 1, civ_name.length - 1); //remove it
-					}
+					}	/* ===!!!===So, this just makes the team name sound funny ? */
 
 					var civ_endings = ["topia","ia","land","dom","ry","oro","sica","le","ithia","eros","ica","rien","arith","hold"]; //add a random ending
 					civ_name = civ_name + civ_endings[Math.floor(Math.random() * civ_endings.length)];
@@ -105,6 +117,7 @@
 						if (cityLocations.length > 0) { //if there are other cities to check against
 							for (var j = 0; j < cityLocations.length; j++) {
 								distance = Math.abs(cityLocations[j][0] - city_x) + Math.abs(cityLocations[j][1] - city_y); //calculate how far away each opponent city is
+								//  for two cities at [1,1] and [4, 5] the distance would be: [(4-1), (5-1)] --> 3+4 = 7
 								console.log("distance: " + distance);
 								
 								if (distance < 8) { //if it's too close, generate a new one
@@ -113,6 +126,7 @@
 							}
 
 							attempts++;
+							/* ===!!=== is there ever a scenatio at which we go over 100 attempts? */
 						}
 					}
 
@@ -128,7 +142,7 @@
 					starting_rock = 1000;
 
 				//add to gameData object
-					gameData.civilizations["civ_" + teams[i]] = {
+					gameData.civilizations["civ_" + teams[i]] = {			/* ===!!=== so, this effectively represents all the info we'd want about a player (?)	 */
 						name: civ_name,
 						resources: {	//starting resources
 							food: starting_food,
@@ -152,6 +166,13 @@
 									startTimestamp:null,
 									endTimestamp:null,
 									action:null
+										/* ===!!===
+										consinder adding:
+
+										city: city_name
+
+										this may be userful for city combat later
+										*/
 								}
 							}
 						}
@@ -161,11 +182,13 @@
 		//players
 			gameData.players = {}; //create a nested players object within gameData
 
-			for (var i = 0; i < players.length; i++) {
+			for (var i = 0; i < players.length; i++) {			/* ===!!!=== I'm still confused about where we're getting the players from - nvm, got it, function arg =) */
 				gameData.players["player_" + i] = {
 					id: players[i].id,	//this comes from the users database
 					name: players[i].name, //this also comes from the users database
 					team: players[i].team, //this comes from the "create game" form, where you choose teams
+
+					/* ===!!!=== not sure what's happening here - we're getting the x & y coordinates from the city city above? */
 					x: gameData.civilizations["civ_" + players[i].team].cities["city_0"].x,	//we'll move the player to their capital city
 					y: gameData.civilizations["civ_" + players[i].team].cities["city_0"].y //we'll move the player to their capital city
 				};
