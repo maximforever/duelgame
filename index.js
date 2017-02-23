@@ -47,17 +47,8 @@
 		];
 
 		app.locals.id = path.basename(request.url, path.extname(request.url)); //this gets the last section of a url and removes the file extension. for example: http://a.com/b/c.html => "c"
-		console.log("ID: " + app.locals.id);
 		app.locals.gameData = games.getGameData(app.locals.id) || games.generateGame(players);	//display game or make one if it doesn't exist - demo purposes - in reality, making a game would be a POST request
-	
-
-		playerNames = [];
-		players.forEach(function(player) {
-			playerNames.push(" " + player.name);
-		});
-		app.locals.players = "Here are the " + players.length + " players: " + playerNames;
-
-
+		games.updateGame(app.locals.gameData);
 		response.render("game");
 	});
 
