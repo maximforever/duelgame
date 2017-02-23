@@ -77,6 +77,56 @@
 		response.render("user");
 	});
 
+/*
+	Max - this is a really ugly way of handling user creation - just username, no password - but it works.
+	The challenge here is - we need to make TWO database calls - one to check how many instances of this username
+	exist in the database, and another to actually create the user IF no such user already exists. I spent hours trying
+	to do this in one db function, and after I couldn't figure it out, decided to just brute-force it. This code will need
+	to be refactored. 
+
+	This is all done to properly redirect. Funny enough, Mongo has a simple built-in method to only insert if the username is unique (see notes in [db.js]signUp() )
+
+	POST /signup --> [db.js] uniqueUser() --> [index.js] tryToSignUp() --> IF USER DOESN'T EXIST: [db.js]signUp() --> [index.js]confirmSignUp --> redirect back to index
+																	   --> IF USER EXISTS: redirect back to sign up page 
+*/
+
+
+	app.get("/signup", function(req, res){
+		res.render("account/signup")
+	});
+
+	app.post("/signup", function(req, res){
+		
+		db.uniqueUser(res, req.body, tryToSignUp);
+
+	});
+
+	function tryToSignUp(res, userCount, user){
+
+		/* 
+			this callback function is called from db.js signUp(). 'userCount' is a number. If the username already exits or is empty, 
+			(result), we redirect back to the sign-up page. Otherwise, we call  [db.js]signUp() to actually create the user.
+
+			As a next step, we'd want to flash a confirm/error message here.
+		*/
+
+
+		console.log("index - username supplied is " + user.username +" and is " + user.username.length + " characters long.");
+		console.log("index - userCount is " + userCount);
+		if(userCount>0 || user.username.length == 0){	// the user already exists in the database, we redirect back to the sign up page.
+			console.log("index - sorry, the username '" + user.username + "' already exists or is empty");
+			res.render("account/signup", { 'error' : "this username already exists or is empty" });		// !! - this allows us to pass back an error message.
+		}else{
+			db.signUp(res, user, confirmSignUp);
+		}
+	}
+
+	function confirmSignUp(res, user){
+		console.log("Successfully created user '" + user.username +"'");
+		res.redirect("/");
+	}
+
+
 	/* MAX - DB WORK HERE */
 
 	app.get("/db", function(req, res){
@@ -114,9 +164,31 @@
 		res.render("allUsers");
 	}
 
+
+	app.get("/joingame", function(req, res){
+		res.render("account/joingame")
+	});
+
+	app.get("/startgame", function(req, res){
+		res.render("account/startgame")
+	});
+
+	app.get("/login", function(req, res){
+		res.render("account/login")
+	});
+
+	app.get("/invite", function(req, res){
+		res.render("account/invite")
+	});
+
+
+
+
 	/* ------- */
 
-		app.use(function(request, response) {
+	// 404 page
+
+	app.use(function(request, response) {
 		response.status(404);
 		response.send("File not found!");
 	});

@@ -11,9 +11,18 @@
 	</head>
 	<body> -->
 
-	<!-- the code above is going to be replaced by _header.ejs  -->
+	<!-- the code above is replaced by header.ejs, except the root size style  -->
 		
 		<% include partials/header %>
+
+
+		 <style>
+            :root {
+                --size: 1/<%= gameData.size %>;     /*this is a CSS variable*/
+            }
+        </style>
+
+
 
 		<div>You are currently viewing gameData for game <%= id %></div>
 		
@@ -75,7 +84,7 @@
 <% include partials/footer %>
 
 
-<!-- the code below is going to be replaced by _footer.ejs  -->
+<!-- the code below is replaced by footer.ejs  -->
 
 <!-- 
 

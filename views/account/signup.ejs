@@ -1,0 +1,17 @@
+<% include ../partials/header %>
+
+<h3>Sign up with a unique username</h3>
+
+<% if (typeof error !== 'undefined') {%>
+    <p class = "error"><%= error %></p>
+<% } %>
+
+
+
+<form action="/signup" method="POST">
+    <input type="text" placeholder="username" name="username">
+    <br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<% include ../partials/footer %>

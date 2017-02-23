@@ -8,6 +8,12 @@
 		background-color: white;
 	}
 
+/* error message styling*/
+
+	.error {
+		color: red;
+	}
+
 /* map */
 	#map {
 		height: 500px;
