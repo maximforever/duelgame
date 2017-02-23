@@ -98,10 +98,6 @@
 		res.redirect('/allusers')
 	});
 
-
-
-
-
 	app.get("/allUsers", function(req, res){
 
 		console.log("========= STARTING THE REQUEST ======");

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 	<head>
 		<title>game</title>
@@ -9,7 +9,12 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body> -->
+
+	<!-- the code above is going to be replaced by _header.ejs  -->
+		
+		<% include partials/header %>
+
 		<div>You are currently viewing gameData for game <%= id %></div>
 		
 		<p><%= JSON.stringify(gameData); %></p>
@@ -65,5 +70,16 @@
 		</div>
 
 		<br><hr><br>
+
+
+<% include partials/footer %>
+
+
+<!-- the code below is going to be replaced by _footer.ejs  -->
+
+<!-- 
+
 	</body>
 </html>
+
+ -->
