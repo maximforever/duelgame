@@ -1,9 +1,11 @@
 /* dependencies */
 	const http = require("http");
-	const fs = require("fs");
-	const path = require("path");
-	const express = require("express");
-	const MongoClient = require('mongodb').MongoClient
+	const fs = require("fs");								// file system
+	const path = require("path");							// access paths
+	const express = require("express");						// express
+	const MongoClient = require('mongodb').MongoClient		// talk to mongo
+	const bodyParser = require('body-parser')				// parse request body
+
 
 	const app = express();
 	app.set("port", process.env.PORT || 3000)
@@ -13,9 +15,26 @@
 /* processes */
 	const games = require("./processes/games");				//pulls in functions from games.js
 	const users = require("./processes/users");				//pulls in functions from users.js
+	const db = require("./processes/db");					//pulls in functions from users.js
+	
+
+/* middleware */
+
+	app.use(function(request, response, next){					// logs request URL
+		console.log("Request: " + request.method + " " + request.url);
+		next();
+	});
+
+	app.use( bodyParser.json() );       					// to support JSON-encoded bodies
+	app.use(bodyParser.urlencoded({     					// to support URL-encoded bodies
+	  extended: true
+	}))
+
+	app.use(express.static(path.join(__dirname, "assets")));	//middleware for the assets folder (stylesheet, etc.)
+
 
 /* routing */
-	app.use(express.static(path.join(__dirname, "assets")));	//middleware for the assets folder (stylesheet, etc.)
+	
 
 	app.get("/", function(request, response) {
 		response.render("index");							// this renders views/index.ejs when the user GETs "/"
@@ -67,7 +86,50 @@
 		response.render("user");
 	});
 
-	app.use(function(request, response) {
+	/* MAX - DB WORK HERE */
+
+	app.get("/db", function(req, res){
+		
+		console.log("hey!");
+		db.addUserToDatabase({name: "Rodrigo"});
+		res.end();
+	});
+
+	app.get("/addUser", function(req, res){
+		res.render("createUser");
+		res.end();
+	});
+
+	app.post("/addUser", function(req, res){
+		console.log("posting to /addUser")
+		// 	console.log(req.body);
+		db.addUserToDatabase(req.body)
+		res.redirect('/allusers')
+	});
+
+
+
+
+
+	app.get("/allUsers", function(req, res){
+
+		console.log("========= STARTING THE REQUEST ======");
+
+		db.allUsers(res, renderUsers);
+		console.log("this is still async");
+
+		//console.log("data from database: " + allUsers);
+	});
+
+	function renderUsers(res, data){
+		console.log("calling back");
+		app.locals.allUsers = data;
+		res.render("allUsers");
+	}
+
+	/* ------- */
+
+		app.use(function(request, response) {
 		response.status(404);
 		response.send("File not found!");
 	});
