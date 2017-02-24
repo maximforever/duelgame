@@ -5,6 +5,7 @@
 	const express = require("express");						// express
 	const MongoClient = require('mongodb').MongoClient		// talk to mongo
 	const bodyParser = require('body-parser')				// parse request body
+	const cookieParser = require('cookie-parser');			// allows us to read cookies
 
 
 	const app = express();
@@ -96,9 +97,7 @@
 	});
 
 	app.post("/signup", function(req, res){
-		
 		db.uniqueUser(res, req.body, tryToSignUp);
-
 	});
 
 	function tryToSignUp(res, userCount, user){
@@ -106,8 +105,6 @@
 		/* 
 			this callback function is called from db.js signUp(). 'userCount' is a number. If the username already exits or is empty, 
 			(result), we redirect back to the sign-up page. Otherwise, we call  [db.js]signUp() to actually create the user.
-
-			As a next step, we'd want to flash a confirm/error message here.
 		*/
 
 
@@ -115,7 +112,7 @@
 		console.log("index - userCount is " + userCount);
 		if(userCount>0 || user.username.length == 0){	// the user already exists in the database, we redirect back to the sign up page.
 			console.log("index - sorry, the username '" + user.username + "' already exists or is empty");
-			res.render("account/signup", { 'error' : "this username already exists or is empty" });		// !! - this allows us to pass back an error message.
+			res.render("account/signup", { 'error' : "This username is empty or already exists  " });		// !! - this allows us to pass back an error message.
 		}else{
 			db.signUp(res, user, confirmSignUp);
 		}
@@ -127,7 +124,27 @@
 	}
 
 
-	/* MAX - DB WORK HERE */
+	/* MAX - DB AND LOG IN/OUT WORK HERE */
+
+
+	app.get("/joingame", function(req, res){
+		res.render("account/joingame")
+	});
+
+	app.get("/startgame", function(req, res){
+		res.render("account/startgame")
+	});
+
+	app.get("/login", function(req, res){
+		console.log("cookies: " + req.cookies);
+		console.log("signed cookies: " + req.signedCookies);
+		res.render("account/login")
+	});
+
+	app.get("/invite", function(req, res){
+		res.render("account/invite")
+	});
+
 
 	app.get("/db", function(req, res){
 		
@@ -165,22 +182,33 @@
 	}
 
 
-	app.get("/joingame", function(req, res){
-		res.render("account/joingame")
+	/*	LOGGING IN/OUT */
+
+
+	app.post("/login", function(req, res){
+		db.uniqueUser(res, req.body, tryToLogIn);
 	});
 
-	app.get("/startgame", function(req, res){
-		res.render("account/startgame")
-	});
 
-	app.get("/login", function(req, res){
-		res.render("account/login")
-	});
+	function tryToLogIn(res, userCount, user){
 
-	app.get("/invite", function(req, res){
-		res.render("account/invite")
-	});
+		/* 
+			this callback function is called from db.js uniqueUser(). 'userCount' is a number. If the user tries to log in with a username that exists,
+			set a cookie with that username.
+		*/
 
+
+		console.log("index - username supplied is " + user.username +" and is " + user.username.length + " characters long.");
+		console.log("index - userCount is " + userCount);
+		if(userCount === 1){	// if we find a user like this in the database, we log in. This is a placeholder for real authentication.
+			res.cookie('testCookie', user.username).send('username: ' + user.username);
+			console.log("index - logged in!");
+		//	res.redirect("/");
+		}else{
+			console.log("index - sorry, the username '" + user.username + "' is incorrect");
+			res.render("account/login", { 'error' : "This username is incorrect" });		// !! - this allows us to pass back an error message.
+		}
+	}
 
 
 

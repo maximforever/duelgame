@@ -19,6 +19,7 @@
   "homepage": "https://github.com/maximforever/duelgame#readme",
   "dependencies": {
     "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
     "express": "^4.14.1",
     "mongodb": "^2.2.24",

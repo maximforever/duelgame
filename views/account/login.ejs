@@ -1,7 +1,22 @@
 <% include ../partials/header %>
 
 
-This is where you join a game
+<h3>Log in with your username</h3>
+
+
+<% if (typeof error !== 'undefined') {%>
+    <p class = "error"><%= error %></p>
+<% } %>
+
+
+
+<form action="/login" method="POST">
+    <input type="text" placeholder="username" name="username">
+    <br><br>
+    <button type="submit">Log In</button>
+</form>
+
+
 
 
 

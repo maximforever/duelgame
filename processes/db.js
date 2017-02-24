@@ -78,6 +78,7 @@ function allUsers(res, callback){
 
 function uniqueUser(res, user, callback){
     // this function checks if the user already exists in the database, then calls the callback function with the count it retrieves
+    // current uses - to see if the user exists in db for signup (BAD), and login (GOOD!)
     
     MongoClient.connect('mongodb://localhost:27017/duelgame', function(err, db)  {    
         if (err) {                              // if we get an error, print the error and close.
